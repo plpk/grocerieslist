@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Shopping List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* Light gray background */
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h1 {
+            font-size: 1.875rem; /* 30px */
+            font-weight: 600;
+            color: #1f2937; /* Dark gray */
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        h2 {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 600;
+            color: #374151; /* Medium gray */
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb; /* Light gray border */
+            padding-bottom: 0.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem; /* Increased padding */
+            border-bottom: 1px solid #e5e7eb; /* Light gray border */
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f3f4f6; /* Very light gray for headers */
+            font-weight: 600;
+            color: #4b5563; /* Gray text for headers */
+        }
+        tr:hover {
+            background-color: #f9fafb; /* Light hover effect */
+        }
+        input[type="checkbox"] {
+            width: 1.25rem; /* 20px */
+            height: 1.25rem; /* 20px */
+            margin-right: 0.5rem;
+            accent-color: #2563eb; /* Blue accent for checkbox */
+            border-radius: 0.25rem; /* Slightly rounded checkbox */
+        }
+        .notes {
+            font-size: 0.875rem; /* 14px */
+            color: #6b7280; /* Lighter gray for notes */
+        }
+        .store-costco {
+            background-color: #e0f2fe; /* Light blue for Costco items */
+            color: #0c4a6e; /* Darker blue text */
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem; /* Rounded badge */
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .store-supermarket {
+            background-color: #fef3c7; /* Light yellow for Supermarket items */
+            color: #78350f; /* Darker yellow/brown text */
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem; /* Rounded badge */
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .strikethrough {
+            text-decoration: line-through;
+            color: #9ca3af; /* Gray out checked items */
+        }
+        .instructions {
+            background-color: #eef2ff; /* Light indigo background */
+            color: #3730a3; /* Indigo text */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Shopping List</h1>
+        <p class="instructions">
+            Check the box next to each item as you acquire it. The item text will be struck through.
+            This list is based on the 7-day, 1900 kcal meal plan.
+        </p>
+
+        <h2>Produce (Fresh & Canned/Jarred)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Got it?</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Store Suggestion</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="produce-list">
+                </tbody>
+        </table>
+
+        <h2>Proteins</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Got it?</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Store Suggestion</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="proteins-list">
+                </tbody>
+        </table>
+
+        <h2>Dairy & Alternatives</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Got it?</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Store Suggestion</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="dairy-list">
+                </tbody>
+        </table>
+
+        <h2>Pantry</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Got it?</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Store Suggestion</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="pantry-list">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        const shoppingList = [
+            // Produce (Fresh & Canned/Jarred)
+            { category: "produce", item: "Onions", quantity: "~2-3 medium", store: "Costco/Supermarket", notes: "For steak/chicken encebollado" },
+            { category: "produce", item: "Mixed Salad Greens", quantity: "At least 9 cups total", store: "Costco", notes: "Sat: 2c, Mon: 2c, Wed: 2c, Thu: 1c, Tue: 2c" },
+            { category: "produce", item: "Carrots", quantity: "Approx. 1 lb", store: "Costco", notes: "For 2.5 cups cooked" },
+            { category: "produce", item: "Asparagus", quantity: "1 bunch", store: "Supermarket", notes: "For 1 cup cooked (Friday)" },
+            { category: "produce", item: "Broccoli", quantity: "Approx. 1-2 heads", store: "Costco/Supermarket", notes: "For 3 cups cooked" },
+            { category: "produce", item: "Potatoes (for mashing)", quantity: "Approx. 2 medium", store: "Costco/Supermarket", notes: "For 1 cup mashed (Saturday)" },
+            { category: "produce", item: "Sweet Potatoes (for mashing)", quantity: "Approx. 1-2 medium/large", store: "Costco/Supermarket", notes: "For 1.5 cups mashed (Tuesday)" },
+            { category: "produce", item: "Assorted Root Vegetables ('Viandas')", quantity: "~1-2 lbs total of 1-2 types", store: "Supermarket", notes: "Yuca, taro, plantain; for 4 small pieces total" },
+            { category: "produce", item: "Plums (fresh)", quantity: "4", store: "Supermarket", notes: "Sat: 2, Thu: 2" },
+            { category: "produce", item: "Bananas (small, 4-inch)", quantity: "2", store: "Costco/Supermarket", notes: "Sun: 1, Thu: 1" },
+            { category: "produce", item: "Apples (fresh)", quantity: "2", store: "Costco/Supermarket", notes: "Fri: 1, Tue: 1" },
+            { category: "produce", item: "Grapes", quantity: "Approx. 1 lb", store: "Costco", notes: "At least 51 grapes" },
+            { category: "produce", item: "Non-acidic fruit in juice", quantity: "1/2 cup", store: "Supermarket", notes: "E.g., canned peaches/pears (Saturday snack)" },
+            { category: "produce", item: "Fruit Cocktail in juice", quantity: "1.5 cups total", store: "Costco/Supermarket", notes: "Fri, Mon, Wed: 1/2c each" },
+            { category: "produce", item: "Applesauce (unsweetened)", quantity: "1.5 cups total", store: "Costco/Supermarket", notes: "Sat, Sun, Wed: 1/2c each" },
+            { category: "produce", item: "Pears in their juice", quantity: "1 cup total", store: "Costco/Supermarket", notes: "Sun, Tue: 1/2c each" },
+            { category: "produce", item: "Mandarin Oranges in juice", quantity: "1 cup total", store: "Costco/Supermarket", notes: "Mon, Wed: 1/2c each" },
+            { category: "produce", item: "Peaches in their juice", quantity: "1 cup total", store: "Costco/Supermarket", notes: "Mon, Thu: 1/2c each" },
+
+            // Proteins
+            { category: "proteins", item: "Steak (for 'bistec encebollado')", quantity: "2 oz", store: "Supermarket", notes: "Saturday" },
+            { category: "proteins", item: "Fish Fillet (for baking)", quantity: "3 oz", store: "Supermarket/Costco (frozen)", notes: "E.g., cod, tilapia (Saturday)" },
+            { category: "proteins", item: "Ground Chicken (lean/extra lean)", quantity: "3 oz", store: "Supermarket/Costco", notes: "Friday" },
+            { category: "proteins", item: "Pork Loin (for baking)", quantity: "2 oz", store: "Supermarket", notes: "Friday" },
+            { category: "proteins", item: "Roasted Turkey (deli or small roast)", quantity: "5 oz total", store: "Supermarket", notes: "Sun: 3 oz, Wed: 2 oz" },
+            { category: "proteins", item: "Ground Beef (lean)", quantity: "4 oz total", store: "Supermarket/Costco", notes: "Sun: 2 oz, Wed: 2 oz" },
+            { category: "proteins", item: "Salmon Fillet (for baking)", quantity: "3 oz", store: "Supermarket/Costco (frozen)", notes: "Monday" },
+            { category: "proteins", item: "Veal (stew meat/fricassee)", quantity: "4 oz total", store: "Supermarket", notes: "Mon: 2 oz, Thu: 2 oz" },
+            { category: "proteins", item: "Canned Tuna in Water", quantity: "One 3 oz can/portion", store: "Costco/Supermarket", notes: "Thursday" },
+            { category: "proteins", item: "Turkey Ham (95-99% fat-free)", quantity: "1 slice", store: "Supermarket", notes: "Wednesday" },
+            { category: "proteins", item: "Chicken Breast", quantity: "3 oz", store: "Costco/Supermarket", notes: "Tuesday" },
+            { category: "proteins", item: "Center-Cut Pork Chop", quantity: "One ~2 oz chop", store: "Supermarket", notes: "Tuesday" },
+            { category: "proteins", item: "Eggs (or egg substitute)", quantity: "2", store: "Costco/Supermarket", notes: "Thu: 1, Tue: 1" },
+            { category: "proteins", item: "Mozzarella Cheese Slices", quantity: "2 slices", store: "Costco/Supermarket", notes: "Sat: 1, Mon: 1" },
+            { category: "proteins", item: "Swiss Cheese Slices", quantity: "3 slices", store: "Costco/Supermarket", notes: "Fri: 1, Sun: 1, Wed: 1" },
+
+            // Dairy & Alternatives
+            { category: "dairy", item: "Low-Fat Milk (1% or skim)", quantity: "96 oz (0.75 gallon)", store: "Costco/Supermarket", notes: "Daily portions vary" },
+            { category: "dairy", item: "Low-Calorie Yogurt", quantity: "One 6 oz container", store: "Supermarket", notes: "Wednesday" },
+
+            // Pantry
+            { category: "pantry", item: "Oatmeal (rolled/quick)", quantity: "2 cups dry", store: "Costco/Supermarket", notes: "Sat: 1c, Mon: 1c" },
+            { category: "pantry", item: "Brown Rice", quantity: "Approx. 2.5-3 cups dry", store: "Costco/Supermarket", notes: "Yields 5 cups cooked" },
+            { category: "pantry", item: "Cornmeal (Harina de Maíz) / Polenta", quantity: "1 cup dry", store: "Supermarket", notes: "Friday" },
+            { category: "pantry", item: "Unsweetened Dry Cereal", quantity: "3 cups", store: "Costco/Supermarket", notes: "Sun: 1.5c, Thu: 1.5c" },
+            { category: "pantry", item: "Whole Wheat Spaghetti", quantity: "Approx. 2 oz dry", store: "Costco/Supermarket", notes: "For 1 cup cooked (Sunday)" },
+            { category: "pantry", item: "Whole Wheat Elbow Macaroni ('Coditos')", quantity: "Approx. 2 oz dry", store: "Supermarket/Costco", notes: "For 1 cup cooked (Wednesday)" },
+            { category: "pantry", item: "Farina / Cream of Wheat", quantity: "1 cup dry", store: "Supermarket", notes: "Tuesday" },
+            { category: "pantry", item: "Multigrain Soda Crackers", quantity: "2 crackers (8 small squares)", store: "Supermarket", notes: "Saturday" },
+            { category: "pantry", item: "Soda Crackers (plain)", quantity: "4 crackers (16 small squares)", store: "Costco/Supermarket", notes: "Thu: 2, Tue: 2" },
+            { category: "pantry", item: "Whole Wheat Bread", quantity: "5 slices", store: "Costco/Supermarket", notes: "Daily portions vary" },
+            { category: "pantry", item: "Canned Chickpeas (Garbanzos)", quantity: "1/2 cup (One 15oz can)", store: "Costco/Supermarket", notes: "Saturday, drain & rinse" },
+            { category: "pantry", item: "Canned Pigeon Peas (Gandules)", quantity: "Approx. one 15oz can", store: "Supermarket/Costco", notes: "For Arroz con Gandules" },
+            { category: "pantry", item: "Canned Mixed Vegetables", quantity: "2 cups total", store: "Costco/Supermarket", notes: "Mon: 1c, Thu: 1c" },
+            { category: "pantry", item: "Canned Pink Beans (Habichuelas Rosadas)", quantity: "1/2 cup (One 15oz can)", store: "Supermarket", notes: "Wednesday, low fat, no sauce" },
+            { category: "pantry", item: "Margarine", quantity: "At least 14 tsp", store: "Costco/Supermarket", notes: "Daily portions vary" },
+            { category: "pantry", item: "Low-Calorie Salad Dressing", quantity: "At least 8 tsp", store: "Supermarket/Costco", notes: "Daily portions vary" },
+            { category: "pantry", item: "Olive Oil", quantity: "At least 5 tsp", store: "Costco/Supermarket", notes: "Mon: 3tsp, Thu: 2tsp" },
+            { category: "pantry", item: "Coffee", quantity: "As needed", store: "Costco/Supermarket", notes: "Daily" },
+            { category: "pantry", item: "Non-acidic Juice", quantity: "4 oz", store: "Supermarket", notes: "Saturday" },
+            { category: "pantry", item: "Diet Nectar (Non-acidic)", quantity: "4 oz", store: "Supermarket", notes: "Wednesday" },
+            { category: "pantry", item: "Fruit Juice (general)", quantity: "8 oz total", store: "Supermarket", notes: "Fri: 4oz, Mon: 4oz" },
+            { category: "pantry", item: "White Grape Juice", quantity: "4 oz", store: "Supermarket", notes: "Friday" },
+            { category: "pantry", item: "Cranberry Juice", quantity: "4 oz", store: "Supermarket/Costco", notes: "Tuesday" },
+            { category: "pantry", item: "Calorie-Free Drinks", quantity: "As needed/preferred", store: "Costco/Supermarket", notes: "Daily" },
+            { category: "pantry", item: "No Sugar Added Ice Cream", quantity: "1/2 cup", store: "Supermarket", notes: "Friday" }
+        ];
+
+        function renderList() {
+            const lists = {
+                produce: document.getElementById('produce-list'),
+                proteins: document.getElementById('proteins-list'),
+                dairy: document.getElementById('dairy-list'),
+                pantry: document.getElementById('pantry-list')
+            };
+
+            // Clear existing rows
+            Object.values(lists).forEach(list => list.innerHTML = '');
+
+            shoppingList.forEach((itemData, index) => {
+                const listElement = lists[itemData.category];
+                if (!listElement) {
+                    console.warn(`Unknown category: ${itemData.category}`);
+                    return;
+                }
+
+                const row = listElement.insertRow();
+                row.id = `item-${index}`;
+
+                const cellCheckbox = row.insertCell();
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `checkbox-${index}`;
+                checkbox.dataset.index = index; // Store index to identify item
+                checkbox.addEventListener('change', handleCheckboxChange);
+                cellCheckbox.appendChild(checkbox);
+
+                const cellItem = row.insertCell();
+                cellItem.textContent = itemData.item;
+                cellItem.id = `itemName-${index}`;
+
+                const cellQuantity = row.insertCell();
+                cellQuantity.textContent = itemData.quantity;
+
+                const cellStore = row.insertCell();
+                const storeSpan = document.createElement('span');
+                if (itemData.store.toLowerCase().includes("costco")) {
+                    storeSpan.className = 'store-costco';
+                } else {
+                    storeSpan.className = 'store-supermarket';
+                }
+                storeSpan.textContent = itemData.store;
+                cellStore.appendChild(storeSpan);
+
+
+                const cellNotes = row.insertCell();
+                cellNotes.textContent = itemData.notes;
+                cellNotes.className = 'notes';
+            });
+            loadCheckboxStates(); // Load states after rendering
+        }
+
+        function handleCheckboxChange(event) {
+            const checkbox = event.target;
+            const index = checkbox.dataset.index;
+            const itemNameCell = document.getElementById(`itemName-${index}`);
+            if (checkbox.checked) {
+                itemNameCell.classList.add('strikethrough');
+            } else {
+                itemNameCell.classList.remove('strikethrough');
+            }
+            saveCheckboxState(index, checkbox.checked);
+        }
+
+        function saveCheckboxState(index, isChecked) {
+            // Using localStorage to remember checkbox states
+            // This is not persistent across different browser sessions if the user clears cache
+            // or if the environment doesn't persist localStorage for this specific iframe.
+            // For a truly persistent solution, a backend database would be needed.
+            localStorage.setItem(`shoppingListItem-${index}`, isChecked);
+        }
+
+        function loadCheckboxStates() {
+            shoppingList.forEach((_, index) => {
+                const isChecked = localStorage.getItem(`shoppingListItem-${index}`) === 'true';
+                const checkbox = document.getElementById(`checkbox-${index}`);
+                const itemNameCell = document.getElementById(`itemName-${index}`);
+                if (checkbox) {
+                    checkbox.checked = isChecked;
+                    if (isChecked) {
+                        itemNameCell.classList.add('strikethrough');
+                    } else {
+                        itemNameCell.classList.remove('strikethrough');
+                    }
+                }
+            });
+        }
+
+        // Initial render
+        renderList();
+    </script>
+</body>
+</html>
